@@ -15,7 +15,9 @@
 #include "offline_data_manager.h"
 #include "controller_api_helper.h"
 #include "neural_controller_C.h"
+#ifdef ZYNQ
 #include "neural_controller_LSTM_C.h"
+#endif
 #include "lqr.h"
 #include "secloc_controller.h"
 #include "secloc_controller_pl.h"
@@ -756,12 +758,14 @@ void CONTROL_BackgroundTask(void)
 	                Q = CB_Eval(&g_cb);
 	                break;
 	            }
+				#ifdef ZYNQ
 	            case OnChipController_neural_controller_LSTM_C:
 	            {
 	                CB_RebindOnChange(&g_cb, &NNC_LSTM_Ops, g_signals, (uint8_t)G_SIGNALS_LEN);
 	                Q = CB_Eval(&g_cb);
 	                break;
 	            }
+				#endif
 	            case OnChipController_SECLOC:
 	            {
 	                CB_RebindOnChange(&g_cb, &SECLOC_Ops, g_signals, (uint8_t)G_SIGNALS_LEN);
