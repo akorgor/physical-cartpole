@@ -27,7 +27,9 @@
 #include "controller_profiles.h"
 #endif
 
-#if defined(ZYNQ) && defined(ZYBO_Z720)
+#ifdef STM
+#define ON_CHIP_BOOT_CONTROLLER OnChipController_PID
+#elif defined(ZYNQ) && defined(ZYBO_Z720)
 /* Show mux: boot idle until exactly one of SW0–SW3 is on. */
 #define ON_CHIP_BOOT_CONTROLLER OnChipController_NONE
 #elif defined(ZYNQ) && defined(RPGD_DUAL_CORE)
@@ -728,12 +730,14 @@ void CONTROL_BackgroundTask(void)
 	                Q = CB_Eval(&g_cb);
 					break;
 				}
+				#ifdef ZYNQ
 				case OnChipController_NeuralImitator:
 				{
 	                CB_RebindOnChange(&g_cb, &NeuralImitator_Ops, g_signals, (uint8_t)G_SIGNALS_LEN);
 	                Q = CB_Eval(&g_cb);
 					break;
 				}
+				#endif
 				case OnChipController_PID_position:
 				{
 	                CB_RebindOnChange(&g_cb, &PIDPos_Ops, g_signals, (uint8_t)G_SIGNALS_LEN);
